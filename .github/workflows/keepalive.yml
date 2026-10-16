@@ -1,0 +1,14 @@
+name: Keep Render backend awake
+
+# Render's free plan sleeps after ~15 min idle, and a cold start takes 30-60 s —
+# long enough that map layers time out and stay blank. Ping /healthz to keep it warm.
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -fsS -m 60 --retry 3 https://gizcode.onrender.com/healthz
