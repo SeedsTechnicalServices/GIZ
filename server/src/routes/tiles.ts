@@ -22,6 +22,7 @@ tilesRouter.get('/:name', (req, res) => {
   res.removeHeader('Pragma');
   res.sendFile(path.join(config.tilesDir, name), (err) => {
     if (err && !res.headersSent) {
+      res.setHeader('Cache-Control', 'no-store');
       res.status(404).json({ error: 'Not found' });
     }
   });
