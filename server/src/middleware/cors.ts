@@ -13,4 +13,7 @@ export const corsMiddleware = cors({
     callback(new Error('Origin not allowed'));
   },
   credentials: false,
+  // Let browsers cache the OPTIONS preflight (Chrome caps this at 2h) - otherwise every
+  // tile/range request is preceded by its own round trip to the server.
+  maxAge: 7200,
 });

@@ -16,6 +16,10 @@ tilesRouter.get('/:name', (req, res) => {
     res.status(404).json({ error: 'Not found' });
     return;
   }
+  // Tile archives only change on redeploy, so let the browser reuse them. `private` keeps
+  // them out of shared caches (access is token-gated). Overrides the global noStore.
+  res.setHeader('Cache-Control', 'private, max-age=86400');
+  res.removeHeader('Pragma');
   res.sendFile(path.join(config.tilesDir, name), (err) => {
     if (err && !res.headersSent) {
       res.status(404).json({ error: 'Not found' });
